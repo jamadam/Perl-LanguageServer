@@ -6,6 +6,7 @@ use Coro ;
 use Coro::AIO ;
 use Data::Dump qw{pp} ;
 use AnyEvent::Util ;
+use Encode;
 
 no warnings 'uninitialized' ;
 
@@ -425,7 +426,7 @@ sub _rpcreq_rangeFormatting
     my $lines = $end - $start + 1 ;
 
     $text =~ /(?:.*?\n){$start}((?:.*?\n){$lines})/ ;
-    my $range_text = $1 ;
+    my $range_text = Encode::encode('UTF-8', $1);
     $range_text =~ s/\n$// ;
     if ($range_text eq '')
         {
@@ -481,7 +482,7 @@ sub _rpcreq_rangeFormatting
     $range -> {end}{line} += $range -> {end}{character} > 0?1:0 ;
     $range -> {end}{character} = 0 ;
 
-    return [ { newText => $out, range => $range } ] ;
+    return [ { newText => Encode::decode('UTF-8', $out), range => $range } ] ;
     }
 
 # ---------------------------------------------------------------------------
